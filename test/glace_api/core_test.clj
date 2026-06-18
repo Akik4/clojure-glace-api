@@ -6,6 +6,11 @@
             [glace-api.core :refer [handler]]
             ))
 
+(use-fixtures :each (fn [test-fn]
+                      (reset! glace-api.glaces-repository/glaces [])
+                      (reset! glace-api.glaces-repository/next-id 0)
+                      (test-fn)))
+
 (defn json-request [method url body]
   (-> (mock/request method url)
       (mock/content-type "application/json")
