@@ -3,11 +3,13 @@
             [ring.middleware.json :as middleware]
             [reitit.ring :as ring]
             [ring.middleware.params :as ring.middleware.params]
-            [glace-api.glaces-service :as service])
+            [glace-api.glaces-service :as service]
+            [glace-api.glaces-memory-repository :as mem-repo])
   (:gen-class)
   (:import (clojure.lang ExceptionInfo)))
 
 (def port 8090)
+(def repository (mem-repo/make-memory-repository))
 
 (defn handle-exception [e]
   (let [data (ex-data e)
@@ -24,19 +26,19 @@
       (catch ExceptionInfo e
         (handle-exception e)))))
 
-(def handler
+(defn make-handler [repo]
   (-> (ring/ring-handler
     (ring/router
     [["/glaces" {:get (fn [_] {:status 200
-                       :body (service/get-all)})
+                       :body (service/get-all repo)})
                 :post (fn [req]
                          (let [name (get-in req [:body :name])]
                            {:status 200
-                            :body (service/create name)}))
+                            :body (service/create repo name)}))
                  :delete (fn [req]
                            (let [id (get-in req [:body :id])]
                              {:status 200
-                           :body (service/delete id)}))}]])
+                           :body (service/delete repo id)}))}]])
 
     (ring/create-default-handler
       {:not-found (fn [_] {:status 404
@@ -45,6 +47,8 @@
       (handle-error-middleware)
       (middleware/wrap-json-body {:keywords? true})
       (ring.middleware.params/wrap-params)))
+
+(def handler (make-handler @repository))
 
 (defn -main
   [& args]

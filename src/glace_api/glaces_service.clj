@@ -3,17 +3,17 @@
             [glace-api.glaces-repository :as repo]
             [glace-api.validation :as validate]))
 
-(defn create [name]
+(defn create [repository name]
   (validate/validate-field-str name)
-  (repo/create-glace name)
+  (repo/create-glace @repository name)
   {:message (str "create : " name)})
 
-(defn delete [id]
+(defn delete [repository id]
   (validate/validate-field-int id)
-  (when-not (repo/glace->exist id)
+  (when-not (repo/glace->exist @repository id)
     (throw (ex-info "can't find element" {:type :not-found})))
-  (repo/delete-glace id)
+  (repo/delete-glace @repository id)
   {:message (str "supprimé : " id)})
 
-(defn get-all []
-  (repo/get-all))
+(defn get-all [repository]
+  (repo/get-all @repository))
