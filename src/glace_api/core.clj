@@ -43,8 +43,8 @@
     (ring/create-default-handler
       {:not-found (fn [_] {:status 404
                            :body {:error "not found"}})}))
-      (middleware/wrap-json-response)
       (handle-error-middleware)
+      (middleware/wrap-json-response)
       (middleware/wrap-json-body {:keywords? true})
       (ring.middleware.params/wrap-params)))
 
