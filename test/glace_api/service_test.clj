@@ -12,31 +12,31 @@
 
 (deftest create-test
   (testing "Glace Creation."
-    (create repository "test")
-    (create repository "deux glaces")
-    (is (= 2 (count (get-all repository))))))
+    (create @repository "test")
+    (create @repository "deux glaces")
+    (is (= 2 (count (get-all @repository))))))
 
 (deftest create-validation-test
   (testing "Creation Validation"
     (is (thrown-with-msg? clojure.lang.ExceptionInfo
                           #"missing a str field"
-                          (create repository  nil)))
+                          (create @repository  nil)))
     (is (thrown-with-msg? clojure.lang.ExceptionInfo
                           #"missing a str field"
-                          (create repository "")))))
+                          (create @repository "")))))
 
 (deftest delete-test
   (testing "Glace deletion"
-    (create repository "chocolat")
-    (create repository "vanille")
-    (delete repository 1)
-    (is (= 1 (count (get-all repository ))))))
+    (create @repository "chocolat")
+    (create @repository "vanille")
+    (delete @repository 1)
+    (is (= 1 (count (get-all @repository ))))))
 
 (deftest delete-validation-test
   (testing "Delete glace validation"
     (is (thrown-with-msg? clojure.lang.ExceptionInfo
                           #"missing an int field"
-                          (delete repository nil)))
+                          (delete @repository nil)))
     (is (thrown-with-msg? clojure.lang.ExceptionInfo
                           #"can't find element"
-                          (delete repository 999)))))
+                          (delete @repository 999)))))

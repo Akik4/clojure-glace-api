@@ -37,7 +37,7 @@
 
 (deftest http-delete-glace-test
          (testing "DELETE /glaces returns 200"
-                  (create test-repo "fraise")
+                  (create @test-repo "fraise")
                   (let [response (@test-handler (json-request :delete "/glaces" {:id 1}))]
                     (is (= 200 (:status response))))))
 
