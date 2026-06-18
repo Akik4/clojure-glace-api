@@ -1,13 +1,28 @@
-
 (ns glace-api.core
   (:require [ring.adapter.jetty :as jetty]
             [ring.middleware.json :as middleware]
             [reitit.ring :as ring]
             [ring.middleware.params :as ring.middleware.params]
-            [glace-api.glaces_service :as service])
-  (:gen-class))
+            [glace-api.glaces-service :as service])
+  (:gen-class)
+  (:import (clojure.lang ExceptionInfo)))
 
 (def port 8090)
+
+(defn handle-exception [e]
+  (let [data (ex-data e)
+        type (:type data)]
+    (cond
+      (= type :validation) {:status 400 :body {:error (ex-message e)}}
+      (= type :not-found)  {:status 404 :body {:error (ex-message e)}}
+      :else                {:status 500 :body {:error "internal server error"}})))
+
+(defn handle-error-middleware [handler]
+  (fn [req]
+    (try
+      (handler req)
+      (catch ExceptionInfo e
+        (handle-exception e)))))
 
 (def handler
   (-> (ring/ring-handler
@@ -27,6 +42,7 @@
       {:not-found (fn [_] {:status 404
                            :body {:error "not found"}})}))
       (middleware/wrap-json-response)
+      (handle-error-middleware)
       (middleware/wrap-json-body {:keywords? true})
       (ring.middleware.params/wrap-params)))
 

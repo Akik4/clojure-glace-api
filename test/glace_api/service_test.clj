@@ -1,6 +1,6 @@
 (ns glace-api.service-test
   (:require [clojure.test :refer :all]
-            [glace-api.glaces_service :refer :all]
+            [glace-api.glaces-service :refer :all]
             ))
 
 (use-fixtures :each (fn [test-fn]
