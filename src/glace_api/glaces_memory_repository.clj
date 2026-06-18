@@ -16,7 +16,7 @@
              :state (:state glace)
              :created_at (str (:created_at glace))})
 
-(defrecord glace-memory-repository [glaces, next-id]
+(defrecord GlaceMemoryRepository [glaces, next-id]
   repo/GlacesRepository
 
   (create-glace [this name]
@@ -38,4 +38,4 @@
   )
 
 (defn make-memory-repository []
-  (->glace-memory-repository (atom []) (atom 0)))
+  (->GlaceMemoryRepository (atom []) (atom 0)))

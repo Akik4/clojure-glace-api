@@ -48,7 +48,7 @@
       (middleware/wrap-json-body {:keywords? true})
       (ring.middleware.params/wrap-params)))
 
-(def handler (make-handler @repository))
+(def handler (make-handler repository))
 
 (defn -main
   [& args]

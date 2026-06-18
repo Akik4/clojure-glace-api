@@ -4,6 +4,7 @@
             [glace-api.glaces-memory-repository :as mem-repo]
             [glace-api.glaces-service :refer :all]
             [ring.mock.request :as mock]
+            [glace-api.core :as core]
             ))
 
 (def test-repo (atom nil))
@@ -11,7 +12,7 @@
 
 (use-fixtures :each (fn [test-fn]
                       (reset! test-repo (mem-repo/make-memory-repository))
-                      (reset! test-handler (glace-api.core/make-handler @test-repo))
+                      (reset! test-handler (core/make-handler test-repo))
                       (test-fn)))
 
 (defn json-request [method url body]
@@ -36,7 +37,7 @@
 
 (deftest http-delete-glace-test
          (testing "DELETE /glaces returns 200"
-                  (create @test-repo "fraise")
+                  (create test-repo "fraise")
                   (let [response (@test-handler (json-request :delete "/glaces" {:id 1}))]
                     (is (= 200 (:status response))))))
 

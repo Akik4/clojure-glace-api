@@ -1,6 +1,5 @@
 (ns glace-api.glaces-service
-  (:require [clojure.string :as str]
-            [glace-api.glaces-repository :as repo]
+  (:require [glace-api.glaces-repository :as repo]
             [glace-api.validation :as validate]))
 
 (defn create [repository name]
