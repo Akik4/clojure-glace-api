@@ -12,7 +12,7 @@
 
 (use-fixtures :each (fn [test-fn]
                       (reset! test-repo (mem-repo/make-memory-repository))
-                      (reset! test-handler (core/make-handler test-repo))
+                      (reset! test-handler (core/make-handler @test-repo))
                       (test-fn)))
 
 (defn json-request [method url body]

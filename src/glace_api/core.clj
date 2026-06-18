@@ -30,15 +30,15 @@
   (-> (ring/ring-handler
     (ring/router
     [["/glaces" {:get (fn [_] {:status 200
-                       :body (service/get-all @repo)})
+                       :body (service/get-all repo)})
                 :post (fn [req]
                          (let [name (get-in req [:body :name])]
                            {:status 200
-                            :body (service/create @repo name)}))
+                            :body (service/create repo name)}))
                  :delete (fn [req]
                            (let [id (get-in req [:body :id])]
                              {:status 200
-                           :body (service/delete @repo id)}))}]])
+                           :body (service/delete repo id)}))}]])
 
     (ring/create-default-handler
       {:not-found (fn [_] {:status 404
