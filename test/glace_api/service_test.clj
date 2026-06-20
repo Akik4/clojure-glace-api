@@ -1,7 +1,8 @@
 (ns glace-api.service-test
   (:require [clojure.test :refer :all]
-            [glace-api.glaces-memory-repository :as mem-repo]
-            [glace-api.glaces-service :refer :all]
+            [glace-api.repositories.glaces-memory-repository :as mem-repo]
+            [glace-api.repositories.glaces-repository :as repo]
+            [glace-api.services.glaces-service :refer :all]
             ))
 
 (def repository (atom nil))
@@ -40,3 +41,29 @@
     (is (thrown-with-msg? clojure.lang.ExceptionInfo
                           #"can't find element"
                           (delete @repository 999)))))
+
+(deftest update-state-test
+  (testing "Glace update state"
+    (create @repository "chocolat")
+    (update-state @repository 1)
+    (is (= 2 (:state (first (get-all @repository)))))))
+
+(deftest update-validation-test
+  (testing "Update glace validation"
+    (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                          #"missing an int field"
+                          (update-state @repository nil)))
+    (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                          #"can't find element"
+                          (update-state @repository 999)))))
+
+(deftest update-step-test
+  (testing "Update more than existing step"
+    (create @repository "chocolat")
+    (dotimes [_ 3]
+      (update-state @repository 1))
+    (let [glace (repo/glace->get @repository 1)]
+      (is (= 4 (:state glace))))
+    (is (thrown-with-msg? clojure.lang.ExceptionInfo
+                         #"State out of bound"
+                         (update-state @repository 1)))))

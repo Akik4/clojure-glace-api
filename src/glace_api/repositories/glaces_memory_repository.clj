@@ -7,7 +7,7 @@
 (defn make-glace [id name]
             (->Glaces id
                       name
-                      :preparation
+                      1
                       (java.time.Instant/now)))
 
 (defn glace->map [glace]
@@ -29,13 +29,23 @@
     (swap! glaces (fn [current]
                     (remove #(= (:id %) id) current))))
 
+  (update-state [this id]
+    (swap! glaces (fn [current]
+                  (mapv #(if (= (:id %) id)
+                             (assoc % :state (inc (:state %))) %) current))))
+
   (glace->exist [this id]
     (boolean (some #(= (:id %) id) @glaces)))
 
+  (glace->get [this id]
+    (when-let [glace (first (filter #(= (:id %) id) @glaces))]
+      (glace->map glace)))
+
   (get-all [this]
     (map glace->map @glaces))
-
   )
+
+
 
 (defn make-memory-repository []
   (->GlaceMemoryRepository (atom []) (atom 0)))

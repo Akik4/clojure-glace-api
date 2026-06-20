@@ -38,7 +38,11 @@
                  :delete (fn [req]
                            (let [id (get-in req [:body :id])]
                              {:status 200
-                           :body (service/delete repo id)}))}]])
+                           :body (service/delete repo id)}))
+                 :put (fn [req]
+                        (let [id (get-in req [:body :id])]
+                          {:status 200
+                           :body (service/update-state repo id)}))}]])
 
     (ring/create-default-handler
       {:not-found (fn [_] {:status 404
