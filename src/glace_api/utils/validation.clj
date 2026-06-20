@@ -1,4 +1,4 @@
-(ns glace-api.validation
+(ns glace-api.utils.validation
   (:require [clojure.string :as str]))
 
 (defn validate-field-str [arg]

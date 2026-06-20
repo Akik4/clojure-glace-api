@@ -1,4 +1,4 @@
-(ns glace-api.glaces-repository)
+(ns glace-api.repositories.glaces-repository)
 
 (defprotocol GlacesRepository
   (create-glace [this name])

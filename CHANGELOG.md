@@ -1,24 +1,34 @@
-# Change Log
-All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](https://keepachangelog.com/).
+# Changelog
+Tous les changements notables du projet sont documentés ici.
+
+## [0.1.0] - 2026-06-18
+
+### Added
+- API REST pour gérer une collection de glaces
+- Endpoints : GET /glaces, POST /glaces, DELETE /glaces
+- Architecture en 3 couches (HTTP, service, repository)
+- Protocole `GlacesRepository` pour abstraction des données
+- Implémentation en mémoire (`GlaceMemoryRepository`)
+- Validation des entrées (champs obligatoires)
+- Gestion centralisée des erreurs HTTP (400, 404, 500)
+- Tests unitaires (service et HTTP)
+- Documentation API complète
+
+### Features
+- Création de glaces avec validation du nom
+- Suppression de glaces par id avec vérification d'existence
+- Listing de toutes les glaces
+- Réponses JSON standardisées
+- Codes HTTP appropriés (200, 201, 400, 404, 500)
 
 ## [Unreleased]
-### Changed
-- Add a new arity to `make-widget-async` to provide a different widget shape.
 
-## [0.1.1] - 2026-06-17
-### Changed
-- Documentation on how to make the widgets.
-
-### Removed
-- `make-widget-sync` - we're all async, all the time.
-
-### Fixed
-- Fixed widget maker to keep working when daylight savings switches over.
-
-## 0.1.0 - 2026-06-17
-### Added
-- Files from the new template.
-- Widget maker public API - `make-widget-sync`.
-
-[Unreleased]: https://sourcehost.site/your-name/glace-api/compare/0.1.1...HEAD
-[0.1.1]: https://sourcehost.site/your-name/glace-api/compare/0.1.0...0.1.1
+### Planned
+- Persistance PostgreSQL
+- Authentification / Autorisation
+- Pagination pour GET /glaces
+- Mise à jour partielle (PATCH /glaces/:id)
+- Rate limiting
+- Logging structuré
+- Swagger/OpenAPI documentation
+- Docker support

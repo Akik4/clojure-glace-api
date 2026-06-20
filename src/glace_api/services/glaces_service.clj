@@ -1,6 +1,6 @@
-(ns glace-api.glaces-service
-  (:require [glace-api.glaces-repository :as repo]
-            [glace-api.validation :as validate]))
+(ns glace-api.services.glaces-service
+  (:require [glace-api.repositories.glaces-repository :as repo]
+            [glace-api.utils.validation :as validate]))
 
 (defn create [repository name]
   (validate/validate-field-str name)

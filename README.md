@@ -1,44 +1,129 @@
 # glace-api
 
-FIXME: description
+API REST simple pour gérer une collection de glaces (desserts).
+
+## Stack
+
+- **Clojure** 1.12.2
+- **Ring** + **Jetty** (serveur HTTP)
+- **Reitit** (routage)
+- **Ring-json** (sérialisation JSON)
+
+## Architecture
+
+L'API suit une architecture en 3 couches avec organisation par packages :
+
+```
+src/glace_api/
+├── core.clj                           → HTTP (routes, middleware)
+├── services/
+│   └── glaces_service.clj            → Logique métier + validation
+├── repositories/
+│   ├── glaces_repository.clj         → Protocole (interface)
+│   └── glaces_memory_repository.clj  → Implémentation mémoire
+└── utils/
+    └── validation.clj                → Utilitaires de validation
+```
 
 ## Installation
 
-Download from https://example.com/FIXME.
+```bash
+git clone <repo>
+cd glace-api
+lein deps
+```
 
-## Usage
+## Lancement
 
-FIXME: explanation
+```bash
+lein run
+```
 
-    $ java -jar glace-api-0.1.0-standalone.jar [args]
+Le serveur démarre sur `http://localhost:8090`
 
-## Options
+## API Endpoints
 
-FIXME: listing of options this app accepts.
+### GET /glaces
+Retourne la liste de toutes les glaces.
 
-## Examples
+```bash
+curl http://localhost:8090/glaces
+```
 
-...
+**Réponse 200:**
+```json
+[
+  {"id": 1, "name": "fraise", "state": "preparation", "created_at": "2026-06-18T..."}
+]
+```
 
-### Bugs
+---
 
-...
+### POST /glaces
+Crée une nouvelle glace.
 
-### Any Other Sections
-### That You Think
-### Might be Useful
+```bash
+curl -X POST http://localhost:8090/glaces \
+  -H "Content-Type: application/json" \
+  -d '{"name": "fraise"}'
+```
+
+**Réponse 200:**
+```json
+{"message": "create : fraise"}
+```
+
+**Réponse 400:** (si name est vide ou nil)
+```json
+{"error": "missing a str field"}
+```
+
+---
+
+### DELETE /glaces
+Supprime une glace par id.
+
+```bash
+curl -X DELETE http://localhost:8090/glaces \
+  -H "Content-Type: application/json" \
+  -d '{"id": 1}'
+```
+
+**Réponse 200:**
+```json
+{"message": "supprimé : 1"}
+```
+
+**Réponse 404:** (si id n'existe pas)
+```json
+{"error": "can't find element"}
+```
+
+**Réponse 400:** (si id est nil)
+```json
+{"error": "missing an int field"}
+```
+
+## Tests
+
+```bash
+lein test
+```
+
+Tests séparés en deux niveaux :
+- `service_test.clj` : logique métier et validation
+- `core_test.clj` : endpoints HTTP et codes de réponse
+
+## Stockage
+
+Actuellement, les données sont stockées en mémoire (atoms). Pour ajouter une persistance :
+
+1. Créer une nouvelle implémentation du protocole `GlacesRepository`
+2. Implémenter les 4 méthodes : `create-glace`, `delete-glace`, `glace->exist`, `get-all`
+3. Injecter l'implémentation dans `core.clj`
+
+Exemple : `postgres_repository.clj` pour PostgreSQL.
 
 ## License
 
-Copyright © 2026 FIXME
-
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-https://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0

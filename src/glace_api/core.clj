@@ -3,8 +3,8 @@
             [ring.middleware.json :as middleware]
             [reitit.ring :as ring]
             [ring.middleware.params :as ring.middleware.params]
-            [glace-api.glaces-service :as service]
-            [glace-api.glaces-memory-repository :as mem-repo])
+            [glace-api.services.glaces-service :as service]
+            [glace-api.repositories.glaces-memory-repository :as mem-repo])
   (:gen-class)
   (:import (clojure.lang ExceptionInfo)))
 

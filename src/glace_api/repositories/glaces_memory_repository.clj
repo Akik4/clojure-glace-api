@@ -1,5 +1,5 @@
-(ns glace-api.glaces-memory-repository
-  (:require [glace-api.glaces-repository :as repo])
+(ns glace-api.repositories.glaces-memory-repository
+  (:require [glace-api.repositories.glaces-repository :as repo])
   )
 
 (defrecord Glaces [id name state created_at])
