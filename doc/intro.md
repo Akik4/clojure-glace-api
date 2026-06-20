@@ -121,6 +121,40 @@ Le reste du code reste identique.
 - Utilisent `ring-mock` pour simuler les requêtes
 - Vérifient que les erreurs sont bien traduites en status HTTP
 
+## Décisions de Design
+
+### Pourquoi 3 couches ?
+
+1. **HTTP** ne doit pas connaître la logique métier — seule interface vers le client
+2. **Service** ne doit pas connaître HTTP — encapsule la logique métier
+3. **Repository** ne doit pas connaître les détails métier — abstrait juste l'accès aux données
+
+Cette séparation permet :
+- De tester chaque couche indépendamment
+- De swapper une implémentation (PostgreSQL pour Memory)
+- De réutiliser la logique métier dans d'autres contextes (CLI, batch, etc)
+
+### Pourquoi les exceptions plutôt qu'un Result type ?
+
+Les exceptions avec types métier (`:validation`, `:not-found`) sont simples et suffisantes ici.
+
+Un Result pattern (`{:ok value}` ou `{:error detail}`) serait utile si :
+- Plusieurs contextes d'erreur nécessitent des messages différents
+- La validation doit être décorrélée de la levée d'exception
+- Le projet devient très grand
+
+Pour l'instant, exceptions = bon compromis simplicité/clarté.
+
+### Standardisation des réponses
+
+Toutes les réponses métier retournent `{:success data}` pour clarifier :
+- Ce n'est pas une erreur
+- La data est cohérente
+
+Les erreurs lèvent des exceptions, pas des réponses normales.
+
+---
+
 ## Améliorations futures
 
 - [ ] Persistance PostgreSQL
@@ -130,3 +164,4 @@ Le reste du code reste identique.
 - [ ] Swagger/OpenAPI
 - [ ] Docker
 - [ ] CI/CD (GitHub Actions)
+- [ ] Result/Either pattern pour plus de flexibilité

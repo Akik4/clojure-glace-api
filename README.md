@@ -52,9 +52,32 @@ curl http://localhost:8090/glaces
 
 **Réponse 200:**
 ```json
-[
-  {"id": 1, "name": "fraise", "state": "preparation", "created_at": "2026-06-18T..."}
-]
+{
+  "success": [
+    {"id": 1, "name": "fraise", "state": 1, "created_at": "2026-06-18T..."}
+  ]
+}
+```
+
+---
+
+### GET /glaces/:id
+Récupère une glace spécifique par id.
+
+```bash
+curl http://localhost:8090/glaces/1
+```
+
+**Réponse 200:**
+```json
+{
+  "success": {"id": 1, "name": "fraise", "state": 1, "created_at": "2026-06-18T..."}
+}
+```
+
+**Réponse 404:** (si id n'existe pas)
+```json
+{"error": "can't find element"}
 ```
 
 ---
@@ -70,12 +93,40 @@ curl -X POST http://localhost:8090/glaces \
 
 **Réponse 200:**
 ```json
-{"message": "create : fraise"}
+{"success": "create : fraise"}
 ```
 
 **Réponse 400:** (si name est vide ou nil)
 ```json
 {"error": "missing a str field"}
+```
+
+---
+
+### PUT /glaces
+Incrémente l'état d'une glace.
+
+États : 1=preparation, 2=freezing, 3=ready, 4=consumption
+
+```bash
+curl -X PUT http://localhost:8090/glaces \
+  -H "Content-Type: application/json" \
+  -d '{"id": 1}'
+```
+
+**Réponse 200:**
+```json
+{"success": "edited : 1"}
+```
+
+**Réponse 400:** (si state >= 4)
+```json
+{"error": "State out of bound"}
+```
+
+**Réponse 404:** (si id n'existe pas)
+```json
+{"error": "can't find element"}
 ```
 
 ---
@@ -91,7 +142,7 @@ curl -X DELETE http://localhost:8090/glaces \
 
 **Réponse 200:**
 ```json
-{"message": "supprimé : 1"}
+{"success": "supprimé : 1"}
 ```
 
 **Réponse 404:** (si id n'existe pas)
