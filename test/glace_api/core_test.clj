@@ -1,8 +1,8 @@
 (ns glace-api.core-test
   (:require [cheshire.core :as json]
             [clojure.test :refer :all]
-            [glace-api.glaces-memory-repository :as mem-repo]
-            [glace-api.glaces-service :refer :all]
+            [glace-api.repositories.glaces-memory-repository :as mem-repo]
+            [glace-api.services.glaces-service :refer :all]
             [ring.mock.request :as mock]
             [glace-api.core :as core]
             ))

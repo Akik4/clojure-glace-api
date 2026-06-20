@@ -20,29 +20,29 @@
   repo/GlacesRepository
 
   (create-glace [this name]
-    (let [id (swap! next-id inc)
+    (let [id (swap! (:next-id this) inc)
           glace (make-glace id name)]
-      (swap! glaces conj glace)
+      (swap! (:glaces this) conj glace)
       glace ))
 
   (delete-glace [this id]
-    (swap! glaces (fn [current]
+    (swap! (:glaces this) (fn [current]
                     (remove #(= (:id %) id) current))))
 
-  (update-state [this id]
-    (swap! glaces (fn [current]
+  (update-state-glace [this id]
+    (swap! (:glaces this) (fn [current]
                   (mapv #(if (= (:id %) id)
                              (assoc % :state (inc (:state %))) %) current))))
 
-  (glace->exist [this id]
-    (boolean (some #(= (:id %) id) @glaces)))
+  (exist-glace? [this id]
+    (boolean (some #(= (:id %) id) @(:glaces this))))
 
-  (glace->get [this id]
-    (when-let [glace (first (filter #(= (:id %) id) @glaces))]
+  (get-glace [this id]
+    (when-let [glace (first (filter #(= (:id %) id) @(:glaces this)))]
       (glace->map glace)))
 
-  (get-all [this]
-    (map glace->map @glaces))
+  (get-all-glaces [this]
+    (map glace->map @(:glaces this)))
   )
 
 

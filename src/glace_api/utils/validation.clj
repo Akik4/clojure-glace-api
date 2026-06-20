@@ -9,8 +9,3 @@
 (defn validate-field-int [arg]
   (when (nil? arg)
     (throw (ex-info "missing an int field" {:type :validation}))))
-
-(defn validate-id [repository id]
-  (validate-field-int id)
-  (when-not (repo/glace->exist repository id)
-    (throw (ex-info "can't find element" {:type :not-found}))))

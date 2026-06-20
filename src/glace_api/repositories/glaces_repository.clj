@@ -3,7 +3,7 @@
 (defprotocol GlacesRepository
   (create-glace [this name])
   (delete-glace [this id])
-  (glace->exist [this id])
-  (update-state [this id])
-  (glace->get [this id])
-  (get-all [this]))
+  (exist-glace? [this id])
+  (update-state-glace [this id])
+  (get-glace [this id])
+  (get-all-glaces [this]))

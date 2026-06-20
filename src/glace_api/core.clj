@@ -42,7 +42,11 @@
                  :put (fn [req]
                         (let [id (get-in req [:body :id])]
                           {:status 200
-                           :body (service/update-state repo id)}))}]])
+                           :body (service/update-state repo id)}))}]
+     ["/glaces/:id"] {:get (fn [req]
+                             (let [id (Integer/parseInt (get-in req [:path-params :id]))]
+                               {:status 200
+                                :body (service/get-glace repo id)}))}])
 
     (ring/create-default-handler
       {:not-found (fn [_] {:status 404
